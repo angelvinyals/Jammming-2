@@ -1,6 +1,6 @@
 // Import Components, and CSS
 import React, { Component } from 'react';
-import './css/SearchBar.css';
+import './SearchBar.css';
 
 // Create and  export Playlist Component
 export class SearchBar extends Component {

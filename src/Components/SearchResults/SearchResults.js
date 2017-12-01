@@ -1,6 +1,6 @@
 // Import Components, and CSS
 import React, { Component } from 'react';
-import './css/SearchResults.css';
+import './SearchResults.css';
 import { TrackList } from '../TrackList/TrackList';
 
 // Create SearchResults Component

@@ -1,6 +1,6 @@
 // Import Components, and CSS
 import React, { Component } from 'react';
-import './css/PlayList.css';
+import './PlayList.css';
 import { TrackList } from '../TrackList/TrackList';
 
 // Create and  export Playlist Component

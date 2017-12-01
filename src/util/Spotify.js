@@ -12,14 +12,20 @@ const Spotify = {
   // Check to see if there is an access token
   // if not create one
   getAccessToken() {
+    console.log(`SPOTIFY.JS getAccessToken --->`)
     if (accessToken) {
       return accessToken;
     }
+    console.log('there is NOT accesToken');
     const urlAccessToken = window.location.href.match(/access_token=([^&]*)/);
+    console.log('urlAccessToken',urlAccessToken);
     const urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
+    console.log('urlExpiresIn',urlExpiresIn);
     if (urlAccessToken && urlExpiresIn) {
       accessToken = urlAccessToken[1];
+      console.log('accessToken',accessToken);
       expiresIn = urlExpiresIn[1];
+      console.log('expiresIn =',expiresIn);
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
     } else {

@@ -1,6 +1,6 @@
 // Import Components, and CSS
 import React, { Component } from 'react';
-import './css/Track.css';
+import './Track.css';
 
 // Create Track Component
 export class Track extends Component {
