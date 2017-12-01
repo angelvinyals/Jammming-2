@@ -1,10 +1,10 @@
  // Import Components, Modules, and CSS
 import React, { Component } from 'react';
-import './App.css';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import { PlayList } from '../PlayList/PlayList';
 import Spotify from '../../util/Spotify';
+import './App.css';
 
 // Get access token
 Spotify.getAccessToken();
@@ -77,10 +77,13 @@ class App extends Component {
   // Search for tracks using the Spotify API
   search(term) {
     console.log(`APPS.search Entering with: ${term}`);
-    Spotify.search(term)
-      .then(searchResults => this.setState({
-        searchResults: searchResults
-      }));
+    if(term){ //if NO TERM ,CALL to spotify.search response with an error bad:response
+      Spotify.search(term)
+            .then(response => this.setState({
+              searchResults: response
+            }));
+    } 
+    //there is no else because it wants than NO UPDATE results when NO TERM   
   }
   // Render the App component and pass props to other components
   render() {
