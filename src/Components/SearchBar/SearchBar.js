@@ -7,16 +7,11 @@ export class SearchBar extends Component {
   constructor(props) {
     super(props);
     // Bind methods to the correct 'this'
-    this.search = this.search.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
   }
-  // Search method passes term to onSearch method
-  search(term) {
-    this.props.onSearch(term);
-  }
-  // handleTermChange Method passes a value to the search method
+   // handleTermChange Method passes a value to onSearch prop inherited from app.js
   handleTermChange(event) {
-    this.search(event.target.value);
+    this.props.onSearch(event.target.value);
   }
   // Render the SearchBar component
   render() {
