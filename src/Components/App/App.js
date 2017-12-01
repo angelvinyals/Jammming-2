@@ -1,6 +1,6 @@
-// Import Components, Modules, and CSS
+ // Import Components, Modules, and CSS
 import React, { Component } from 'react';
-import './css/App.css';
+import './App.css';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import { PlayList } from '../PlayList/PlayList';
@@ -8,15 +8,19 @@ import Spotify from '../../util/Spotify';
 
 // Get access token
 Spotify.getAccessToken();
+console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
 class App extends Component {
+  //console.log('APP.JS -->  App component');
+
   constructor(props){
+    console.log('APP.JS -->  constructor');
     super(props);
     // Set state properties
     this.state = {
       searchResults: [],
-      playlistName: 'My Playlist',
+      playlistName: '',
       playlistTracks: []
     }
     // Be sure that all methods are bound to the correct 'this'
@@ -28,6 +32,11 @@ class App extends Component {
   }
   // If the track is not already in the playlist, add it
   addTrack(track) {
+
+    console.log(`APPS.addTrack Entering with: ${track}`);
+
+    console.log('track: ',track);
+    console.log('playlistTracks: ',this.state.playlistTracks);
     if (!this.state.playlistTracks.find(playlistTrack => playlistTrack.id === track.id)) {
       this.setState(prevState => ({
         playlistTracks: [...prevState.playlistTracks, track]
@@ -36,6 +45,7 @@ class App extends Component {
   }
   // Find a track by the id and remove it from the playlistTracks array
   removeTrack(track) {
+    console.log(`APPS.removeTrack Entering with: ${track}`);
     this.setState({
       playlistTracks: this.state.playlistTracks.filter(
       playlistTrack => playlistTrack.id !== track.id)
@@ -43,12 +53,20 @@ class App extends Component {
   }
   // Set the state of playlistName to a new value
   updatePlaylistName(name){
+    console.log(`APPS.updatePlayListName Entering with: ${name}`);
     this.setState({playlistName: name});
   }
   // Save a playlist to Spotify
   savePlaylist() {
+    console.log(`APPS.savePlaylist Entering`);
+    ///////////////
+    //comprovar si hi ha name
+    //////////////
     const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
     Spotify.savePlaylist(this.state.playlistName, trackUris);
+    //////////////////
+    //FALTA CONFIRMACIÓ DE QUE HA ESTAT GRAVAT (if(response.ok))
+    ////////////////////////
     // Once the playlist is save set the state back to empty
     this.setState({
       playlistName: "Dan's Playlist",
@@ -58,6 +76,7 @@ class App extends Component {
   }
   // Search for tracks using the Spotify API
   search(term) {
+    console.log(`APPS.search Entering with: ${term}`);
     Spotify.search(term)
       .then(searchResults => this.setState({
         searchResults: searchResults
