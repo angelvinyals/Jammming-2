@@ -30,12 +30,10 @@ class App extends Component {
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
+
   // If the track is not already in the playlist, add it
   addTrack(track) {
-
-    console.log(`APPS.addTrack Entering with: ${track}`);
-
-    console.log('track: ',track);
+    console.log(`APP.JS -->  addTrack with: ${track}`);
     console.log('playlistTracks: ',this.state.playlistTracks);
     if (!this.state.playlistTracks.find(playlistTrack => playlistTrack.id === track.id)) {
       this.setState(prevState => ({
@@ -43,24 +41,26 @@ class App extends Component {
       }));
     }
   }
+
   // Find a track by the id and remove it from the playlistTracks array
   removeTrack(track) {
-    console.log(`APPS.removeTrack Entering with: ${track}`);
+    console.log(`APP.JS -->  removeTrack with: ${track}`);
     this.setState({
       playlistTracks: this.state.playlistTracks.filter(
       playlistTrack => playlistTrack.id !== track.id)
     });
   }
+
   // Set the state of playlistName to a new value
   updatePlaylistName(name){
-    console.log(`APPS.updatePlayListName Entering with: ${name}`);
+    console.log(`APP.JS -->  updatePlaylistName with: ${name}`);
     this.setState({playlistName: name});
   }
   // Save a playlist to Spotify
   savePlaylist() {
-    console.log(`APPS.savePlaylist Entering`);
+    console.log(`APP.JS -->  savePlaylist`);
     ///////////////
-    //comprovar si hi ha name
+    if(!this.state.playlistName){return}
     //////////////
     const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
     Spotify.savePlaylist(this.state.playlistName, trackUris);
