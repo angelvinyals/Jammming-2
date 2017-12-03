@@ -1,26 +1,29 @@
+import {generateRandomString} from './generateRandomString'
+
 // Create variables for use in the Spotify Module
-//const clientId = '4d8cade346314f16967c997f68279990';
-//const redirectUri = 'http://dankincaid.surge.sh';
 const clientId = 'ef4013b061ed49d6b107a170fbe84e5c'; // Your client id
 const redirectUri = 'http://localhost:3000/callback'; // Your redirect uri
-const spotifyUrl = `http://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
+//const spotifyUrl = `http://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
 let accessToken = undefined;
 let expiresIn = undefined;
 
 // Create Spotify Module
 const Spotify = {
-  // Check to see if there is an access token
-  // if not create one
+  
   getAccessToken() {
     console.log(`SPOTIFY.JS getAccessToken --->`)
+    // Check to see if there is an access token    
     if (accessToken) {
+      console.log('We have accesToken yet');
       return accessToken;
     }
+    // if not create one
     console.log('there is NOT accesToken');
     const urlAccessToken = window.location.href.match(/access_token=([^&]*)/);
     console.log('urlAccessToken',urlAccessToken);
     const urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
     console.log('urlExpiresIn',urlExpiresIn);
+
     if (urlAccessToken && urlExpiresIn) {
       accessToken = urlAccessToken[1];
       console.log('accessToken',accessToken);
@@ -29,9 +32,21 @@ const Spotify = {
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
     } else {
-      window.location = spotifyUrl;
+      console.log('there is NOT urlAccessToken || urlExpiresIn');
+      let scope = 'playlist-modify-public';
+      let state=generateRandomString(8);
+      console.log('generate state= ',state)
+      let accessUrl = 'https://accounts.spotify.com/authorize';
+              accessUrl += '?response_type=token';
+              accessUrl += '&client_id=' + encodeURIComponent(clientId);
+              accessUrl += '&scope=' + encodeURIComponent(scope);
+              accessUrl += '&redirect_uri=' + encodeURIComponent(redirectUri);
+              accessUrl += '&state=' + encodeURIComponent(state);
+          console.log(`accessUrl to get token= ${accessUrl}`)
+      window.location = accessUrl;
     }
   },
+
   // Search Spotify for a track
   search(term) {
     console.log(`SPOTIFY.JS search --->`)
@@ -60,6 +75,7 @@ const Spotify = {
         })
       });
   },
+
   // Save a users playlist
   savePlaylist(name, trackUris) {
     // If arguments are missing or there a no tracks in the playlist
@@ -116,3 +132,5 @@ const Spotify = {
 };
 
 export default Spotify;
+
+
