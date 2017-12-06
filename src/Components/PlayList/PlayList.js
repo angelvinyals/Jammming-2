@@ -18,7 +18,7 @@ export class PlayList extends Component {
   render() {
     return (
       <div className="Playlist">
-        <input value={this.props.name} onChange={this.handleNameChange} />
+        <input value={this.props.name} onChange={this.handleNameChange} placeholder="insert Play List name"/>
         <TrackList tracks={this.props.tracks} onRemove={this.props.onRemove} />
         <a className="Playlist-save" onClick={this.props.onSave}>
           SAVE TO SPOTIFY
