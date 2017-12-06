@@ -7,8 +7,8 @@ import Spotify from '../../util/Spotify';
 import './App.css';
 
 // Get access token
-Spotify.getAccessToken();
-console.log('APP.JS -->  Spotify.getAccessToken');
+//Spotify.getAccessToken();
+//console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
 class App extends Component {
@@ -30,6 +30,12 @@ class App extends Component {
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
+
+  componentDidMount() {
+      console.log('Component DID MOUNT!')
+      Spotify.getAccessToken();
+      console.log('APP.JS -->  Spotify.getAccessToken');
+   }
 
   // If the track is not already in the playlist, add it
   addTrack(track) {
@@ -69,7 +75,7 @@ class App extends Component {
     ////////////////////////
     // Once the playlist is save set the state back to empty
     this.setState({
-      playlistName: "Dan's Playlist",
+      playlistName: "",
       searchResults: [],
       playlistTracks: []
     });
