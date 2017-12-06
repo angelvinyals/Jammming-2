@@ -6,9 +6,6 @@ import { PlayList } from '../PlayList/PlayList';
 import Spotify from '../../util/Spotify';
 import './App.css';
 
-// Get access token
-//Spotify.getAccessToken();
-//console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
 class App extends Component {
