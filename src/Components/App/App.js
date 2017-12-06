@@ -7,8 +7,8 @@ import Spotify from '../../util/Spotify';
 import './App.css';
 
 // Get access token
-//Spotify.getAccessToken();
-//console.log('APP.JS -->  Spotify.getAccessToken');
+Spotify.getAccessToken();
+console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
 class App extends Component {
@@ -21,9 +21,7 @@ class App extends Component {
     this.state = {
       searchResults: [],
       playlistName: '',
-      playlistTracks: [],
-      accessToken:'',
-      expiresIn:''
+      playlistTracks: []
     }
     // Be sure that all methods are bound to the correct 'this'
     this.addTrack = this.addTrack.bind(this);
@@ -31,36 +29,6 @@ class App extends Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('APP.JS -->  componentDidMount');
-    this.getAccessToken();
-  }
-    
-
-  async getAccessToken(){
-    console.log('APP.JS -->  getAccessToken');
-    let res = await Spotify.getAccessToken();
-    console.log(`res.accessToken : ${res.accessToken}`);
-    console.log(`res.expiresIn : ${res.expiresIn}`);
-    this.handleAccessToken(res)
-    
-    
-  }
-
-  handleAccessToken(res){
-    console.log(`APP.JS -->  handleAccesToken with ${res.accessToken} and ${res.expiresIn}`);
-    this.setState({ accessToken: res.accessToken, expiresIn: res.expiresIn},
-      () => { 
-        window.setTimeout(this.initAccessToken, res.expiresIn*1000)
-      }
-    );
-  }
-
-  initAccessToken(){
-     console.log(`APP.JS -->  initAccessToken`)
-     this.setState({accessToken: '',expiresIn:''})
   }
 
   // If the track is not already in the playlist, add it
@@ -93,29 +61,24 @@ class App extends Component {
     console.log(`APP.JS -->  savePlaylist`);
     ///////////////
     if(!this.state.playlistName){return}
-    if(!this.state.accessToken){return}
     //////////////
     const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
-    Spotify.savePlaylist(this.state.playlistName, trackUris, this.state.accessToken);
+    Spotify.savePlaylist(this.state.playlistName, trackUris);
     //////////////////
     //FALTA CONFIRMACIÓ DE QUE HA ESTAT GRAVAT (if(response.ok))
     ////////////////////////
     // Once the playlist is save set the state back to empty
     this.setState({
-      playlistName: "",
+      playlistName: "Dan's Playlist",
+      searchResults: [],
       playlistTracks: []
     });
   }
   // Search for tracks using the Spotify API
   search(term) {
     console.log(`APPS.search Entering with: ${term}`);
-    let accessToken= this.state.accessToken
-    if(accessToken.length<=0){
-      console.log(`APPS.search : there in NOT accessToken --> APPS.getAccessToken() `);
-      this.getAccessToken()
-    }
     if(term){ //if NO TERM ,CALL to spotify.search response with an error bad:response
-      Spotify.search(term,this.state.accessToken)
+      Spotify.search(term)
             .then(response => this.setState({
               searchResults: response
             }));

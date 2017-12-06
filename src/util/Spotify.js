@@ -4,8 +4,8 @@ import {generateRandomString} from './generateRandomString'
 const clientId = 'ef4013b061ed49d6b107a170fbe84e5c'; // Your client id
 const redirectUri = 'http://localhost:3000/callback'; // Your redirect uri
 //const spotifyUrl = `http://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
-//let accessToken = undefined;
-//let expiresIn = undefined;
+let accessToken = undefined;
+let expiresIn = undefined;
 
 // Create Spotify Module
 const Spotify = {
@@ -13,29 +13,24 @@ const Spotify = {
   getAccessToken() {
     console.log(`SPOTIFY.JS getAccessToken --->`)
     // Check to see if there is an access token    
-    //if (accessToken) {
-    //  console.log('We have accesToken yet');
-    //  return accessToken;
-    //}
+    if (accessToken) {
+      console.log('We have accesToken yet');
+      return accessToken;
+    }
     // if not create one
-    //console.log('there is NOT accesToken');
+    console.log('there is NOT accesToken');
     const urlAccessToken = window.location.href.match(/access_token=([^&]*)/);
     console.log('urlAccessToken',urlAccessToken);
     const urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
     console.log('urlExpiresIn',urlExpiresIn);
 
     if (urlAccessToken && urlExpiresIn) {
-      let res={}
-      res.accessToken = urlAccessToken[1];
-      console.log('res.accessToken',res.accessToken);
-      res.expiresIn = urlExpiresIn[1];
-      console.log('res.expiresIn =',res.expiresIn);
-      //window.setTimeout(() => accessToken = '', expiresIn * 1000);
-      //window.history.pushState('Access Token', null, '/');
-      //let res ={
-      //  accessToken: accessToken,
-      //  expiresIn: expiresIn}
-      return res
+      accessToken = urlAccessToken[1];
+      console.log('accessToken',accessToken);
+      expiresIn = urlExpiresIn[1];
+      console.log('expiresIn =',expiresIn);
+      window.setTimeout(() => accessToken = '', expiresIn * 1000);
+      window.history.pushState('Access Token', null, '/');
     } else {
       console.log('there is NOT urlAccessToken || urlExpiresIn');
       let scope = 'playlist-modify-public';
@@ -53,9 +48,8 @@ const Spotify = {
   },
 
   // Search Spotify for a track
-  search(term, accessToken) {
+  search(term) {
     console.log(`SPOTIFY.JS search --->`)
-    console.log(`accessToken = ${accessToken}`)
     // Spotify Search Endpoint
     const searchUrl = `https://api.spotify.com/v1/search?type=track&q=${term.replace(' ', '%20')}`;
     // Send request and Authorization
@@ -65,15 +59,7 @@ const Spotify = {
         }
       })
       // Convert the response to json
-      .then(response =>{
-        console.log('SPOTIFY.Search()- response : ',response);
-        if (response.ok){
-          return response.json();
-        } else {
-
-          return  
-        }
-      })
+      .then(response => response.json())
       .then(jsonResponse => {
         // if the response is empty return an empty array
         if (!jsonResponse.tracks) return [];
@@ -91,13 +77,9 @@ const Spotify = {
   },
 
   // Save a users playlist
-  savePlaylist(name, trackUris, accessToken) {
+  savePlaylist(name, trackUris) {
     // If arguments are missing or there a no tracks in the playlist
     // do nothing
-    console.log(`SPOTIFY.JS savePlaylist --->`)
-    console.log(`Playlist name: ${name}`)
-    console.log(`tracu uris: ${trackUris}`)
-    console.log(`access Token: ${accessToken}`)
     if (!name || !trackUris || trackUris.length === 0) return;
     // Spotify user info endpoint
     const userUrl = 'https://api.spotify.com/v1/me';
@@ -112,10 +94,7 @@ const Spotify = {
       headers: headers
     })
     // Convert the response to json
-    .then(response => {
-      console.log('SPOTIFY.savePlaylist()- response : ',response);
-      return response.json()
-    })
+    .then(response => response.json())
     // Set the userId variable to the returned Id
     .then(jsonResponse => userId = jsonResponse.id)
     // Create the playlist on Spotify
