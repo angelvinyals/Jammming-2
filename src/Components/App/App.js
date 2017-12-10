@@ -112,7 +112,7 @@ class App extends Component {
   savePlaylist() {
     console.log(`APP.JS -->  savePlaylist`);
     ///////////////
-    if(!this.state.playlistName){this.isStateAtrribute('playlistName', 'Give a NAME to PLAY list, please.')}
+    if(!this.state.playlistName){return this.isStateAtrribute('playlistName', 'Give a NAME to PLAY list, please.')}
     //////////////
     const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
     Spotify.savePlaylist(this.state.playlistName, trackUris);
@@ -121,7 +121,7 @@ class App extends Component {
     ////////////////////////
     // Once the playlist is save set the state back to empty
     this.setState({
-      playlistName: "Dan's Playlist",
+      playlistName: "",
       searchResults: [],
       playlistTracks: []
     });
@@ -147,11 +147,15 @@ class App extends Component {
         <div className="App">
           <SearchBar onSearch={this.search} />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults}
-            onAdd={this.addTrack}/>
-            <PlayList name={this.state.playlistName}
-            tracks={this.state.playlistTracks} onRemove={this.removeTrack}
-            onNameChange={this.updatePlaylistName} onSave={this.savePlaylist} />
+            <SearchResults 
+              searchResults={this.state.searchResults}
+              onAdd={this.addTrack}/>
+            <PlayList 
+              name={this.state.playlistName}
+              tracks={this.state.playlistTracks} 
+              onRemove={this.removeTrack}
+              onNameChange={this.updatePlaylistName} 
+              onSave={this.savePlaylist} />
           </div>
           <Modal
             show={this.state.isOpen}
