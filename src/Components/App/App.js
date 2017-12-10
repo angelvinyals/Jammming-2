@@ -4,6 +4,7 @@ import {generateRandomString} from '../../util/generateRandomString'
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import { PlayList } from '../PlayList/PlayList';
+import Modal from '../Modal/Modal'
 import Spotify from '../../util/Spotify';
 import './App.css';
 

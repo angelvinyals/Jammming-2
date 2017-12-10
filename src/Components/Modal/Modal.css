@@ -1,0 +1,71 @@
+.backdrop{
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.5);
+  padding: 50px;
+}
+
+.modal  {
+  background-color: #7e6b70;
+  color: #2f2839;
+  border-radius: 5px;
+  max-width: 400px;
+  width: 80%;
+  min-height: 200px;
+  position: absolute;
+  margin: 0 auto;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+}
+
+.footer {
+    color: #aaa;
+   
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    margin-bottom: 50px; 
+}
+
+.footer:hover,
+.footer:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button {
+  font-size: 1em;
+  font-weight: bold;
+  background-color: #000;
+  margin: 0 auto;
+
+  border: none;
+  padding: .5em 1em;
+  color: #fff;
+  box-shadow: 0 0 0 2px #000 inset;
+  border-radius: .25em;
+  position: absolute;
+  margin: 0 auto;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  -webkit-transition: background .4s ease, color .4s ease;
+  transition: background .4s ease, color .4s ease;
+}
+
+button:hover {
+  box-shadow: 0 0 0 2px #000 inset;
+  color: #000;
+  background-color: transparent;
+}
