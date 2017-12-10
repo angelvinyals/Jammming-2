@@ -21,7 +21,9 @@ class App extends Component {
       playlistName: '',
       playlistTracks: [],
       accessToken:'',
-      expiresIn:''
+      expiresIn:'',
+      isOpen: false,
+      message:'',
     }
     // Be sure that all methods are bound to the correct 'this'
     this.addTrack = this.addTrack.bind(this);
@@ -63,6 +65,23 @@ class App extends Component {
     window.history.pushState('Access Token', null, '/');
   }
 
+  toggleModal = () => {
+    console.log(`APP.JS -->  toggleModal`);
+      this.setState({
+        isOpen: !this.state.isOpen
+      });
+  }
+
+  isStateAtrribute(attributeName, message){
+    if(this.state[attributeName]){
+      return this.state[attributeName]
+    } else {
+      this.setState({message: message})
+      this.toggleModal()
+      return
+    }
+  }
+
   
   // If the track is not already in the playlist, add it
   addTrack(track) {
@@ -93,7 +112,7 @@ class App extends Component {
   savePlaylist() {
     console.log(`APP.JS -->  savePlaylist`);
     ///////////////
-    if(!this.state.playlistName){return}
+    if(!this.state.playlistName){this.isStateAtrribute('playlistName', 'Give a NAME to PLAY list, please.')}
     //////////////
     const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
     Spotify.savePlaylist(this.state.playlistName, trackUris);
@@ -134,6 +153,13 @@ class App extends Component {
             tracks={this.state.playlistTracks} onRemove={this.removeTrack}
             onNameChange={this.updatePlaylistName} onSave={this.savePlaylist} />
           </div>
+          <Modal
+            show={this.state.isOpen}
+                onClose={this.toggleModal}
+                
+            >
+              <p>{this.state.message}</p>
+            </Modal>
         </div>
       </div>
     );
