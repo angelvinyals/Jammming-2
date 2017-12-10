@@ -82,6 +82,12 @@ class App extends Component {
     }
   }
 
+  showModal(message){
+    this.setState({message: message})
+    this.toggleModal()
+    return
+  }
+
   
   // If the track is not already in the playlist, add it
   addTrack(track) {
@@ -112,19 +118,28 @@ class App extends Component {
   savePlaylist() {
     console.log(`APP.JS -->  savePlaylist`);
     ///////////////
-    if(!this.state.playlistName){return this.isStateAtrribute('playlistName', 'Give a NAME to PLAY list, please.')}
+    if(!this.state.playlistName){return this.showModal('Give a NAME to PLAY list, please.')}
+    if(this.state.playlistTracks.length>=1){
+      const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
+      Spotify.savePlaylist(this.state.playlistName, trackUris, this.state.accessToken)
+      this.setState({
+        playlistName: "",
+        searchResults: [],
+        playlistTracks: []
+      });
+    } else {
+      return this.showModal('There is no tracks to Save.')
+    }
     //////////////
-    const trackUris = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
-    Spotify.savePlaylist(this.state.playlistName, trackUris);
+    
+    
+       
+ 
     //////////////////
     //FALTA CONFIRMACIÓ DE QUE HA ESTAT GRAVAT (if(response.ok))
     ////////////////////////
     // Once the playlist is save set the state back to empty
-    this.setState({
-      playlistName: "",
-      searchResults: [],
-      playlistTracks: []
-    });
+    
   }
   // Search for tracks using the Spotify API
   search(term) {

@@ -1,11 +1,8 @@
 // Create variables for use in the Spotify Module
 const clientId = 'ef4013b061ed49d6b107a170fbe84e5c'; // Your client id
 const redirectUri = 'http://localhost:3000/callback'; // Your redirect uri
-//const spotifyUrl = `http://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
-let access = {
-  token:'',
-  expiresIn:''
-}
+
+
 // Create Spotify Module
 const Spotify = {
 
@@ -60,14 +57,14 @@ const Spotify = {
   },
 
   // Save a users playlist
-  savePlaylist(name, trackUris) {
+  savePlaylist(name, trackUris, accessToken) {
     // If arguments are missing or there a no tracks in the playlist
     // do nothing
     if (!name || !trackUris || trackUris.length === 0) return;
     // Spotify user info endpoint
     const userUrl = 'https://api.spotify.com/v1/me';
     const headers = {
-      Authorization: `Bearer ${access.token}`
+      Authorization: `Bearer ${accessToken}`
     };
     let userId = undefined;
     let playlistId = undefined;
