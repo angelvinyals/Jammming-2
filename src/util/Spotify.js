@@ -1,54 +1,28 @@
-import {generateRandomString} from './generateRandomString'
-
 // Create variables for use in the Spotify Module
 const clientId = 'ef4013b061ed49d6b107a170fbe84e5c'; // Your client id
 const redirectUri = 'http://localhost:3000/callback'; // Your redirect uri
 //const spotifyUrl = `http://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
-let accessToken = undefined;
-let expiresIn = undefined;
-
+let access = {
+  token:'',
+  expiresIn:''
+}
 // Create Spotify Module
 const Spotify = {
-  
-  getAccessToken() {
-    console.log(`SPOTIFY.JS getAccessToken --->`)
-    // Check to see if there is an access token    
-    if (accessToken) {
-      console.log('We have accesToken yet');
-      return accessToken;
-    }
-    // if not create one
-    console.log('there is NOT accesToken');
-    const urlAccessToken = window.location.href.match(/access_token=([^&]*)/);
-    console.log('urlAccessToken',urlAccessToken);
-    const urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
-    console.log('urlExpiresIn',urlExpiresIn);
 
-    if (urlAccessToken && urlExpiresIn) {
-      accessToken = urlAccessToken[1];
-      console.log('accessToken',accessToken);
-      expiresIn = urlExpiresIn[1];
-      console.log('expiresIn =',expiresIn);
-      window.setTimeout(() => accessToken = '', expiresIn * 1000);
-      window.history.pushState('Access Token', null, '/');
-    } else {
-      console.log('there is NOT urlAccessToken || urlExpiresIn');
-      let scope = 'playlist-modify-public';
-      let state=generateRandomString(8);
-      console.log('generate state= ',state)
-      let accessUrl = 'https://accounts.spotify.com/authorize';
-              accessUrl += '?response_type=token';
-              accessUrl += '&client_id=' + encodeURIComponent(clientId);
-              accessUrl += '&scope=' + encodeURIComponent(scope);
-              accessUrl += '&redirect_uri=' + encodeURIComponent(redirectUri);
-              accessUrl += '&state=' + encodeURIComponent(state);
-          console.log(`accessUrl to get token= ${accessUrl}`)
-      window.location = accessUrl;
-    }
+  accessUrl(scope,state){
+    console.log(`SPOTIFY.JS accessUrl --->`)
+    let accessUrl = 'https://accounts.spotify.com/authorize';
+    accessUrl += '?response_type=token';
+    accessUrl += '&client_id=' + encodeURIComponent(clientId);
+    accessUrl += '&scope=' + encodeURIComponent(scope);
+    accessUrl += '&redirect_uri=' + encodeURIComponent(redirectUri);
+    accessUrl += '&state=' + encodeURIComponent(state);
+    return accessUrl
   },
+  
 
   // Search Spotify for a track
-  search(term) {
+  search(term,accessToken) {
     console.log(`SPOTIFY.JS search --->`)
     // Spotify Search Endpoint
     const searchUrl = `https://api.spotify.com/v1/search?type=track&q=${term.replace(' ', '%20')}`;
@@ -84,7 +58,7 @@ const Spotify = {
     // Spotify user info endpoint
     const userUrl = 'https://api.spotify.com/v1/me';
     const headers = {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${access.token}`
     };
     let userId = undefined;
     let playlistId = undefined;

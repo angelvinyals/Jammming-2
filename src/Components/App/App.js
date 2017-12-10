@@ -1,11 +1,15 @@
  // Import Components, Modules, and CSS
 import React, { Component } from 'react';
+import {generateRandomString} from '../../util/generateRandomString'
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import { PlayList } from '../PlayList/PlayList';
 import Spotify from '../../util/Spotify';
 import './App.css';
 
+// Get access token
+//Spotify.getAccessToken();
+//console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
 class App extends Component {
@@ -18,7 +22,9 @@ class App extends Component {
     this.state = {
       searchResults: [],
       playlistName: '',
-      playlistTracks: []
+      playlistTracks: [],
+      accessToken:'',
+      expiresIn:''
     }
     // Be sure that all methods are bound to the correct 'this'
     this.addTrack = this.addTrack.bind(this);
@@ -28,12 +34,38 @@ class App extends Component {
     this.search = this.search.bind(this);
   }
 
-  componentDidMount() {
-      console.log('Component DID MOUNT!')
-      Spotify.getAccessToken();
-      console.log('APP.JS -->  Spotify.getAccessToken');
-   }
+  componentWillMount() {
+    console.log(`APP.JS -->  componentWillMount`);
+    this.GetAccessToken()
+    
+  }  
 
+  //get accessToken second time when url callback match
+  GetAccessToken(){
+    console.log(`APP.JS -->  GetAccessToken`);
+    const urlAccessToken = window.location.href.match(/access_token=([^&]*)/);
+    console.log(urlAccessToken)
+    const urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
+    
+    if (urlAccessToken && urlExpiresIn) {
+      this.SetAccessToken(urlAccessToken[1],urlExpiresIn[1])
+      
+    } else {
+      let scope = 'playlist-modify-public';
+      let state= generateRandomString(8);      
+      let accessUrl= Spotify.accessUrl(scope,state)      
+      window.location = accessUrl;
+    }
+  }
+
+  //after GetAccessToken updates state.accesstoken and state.expiresIn
+  SetAccessToken(accessToken, expiresIn){
+    this.setState({accessToken: accessToken, expiresIn: expiresIn})
+    window.setTimeout(() => this.setState({accessToken :'', expiresIn:''}), expiresIn * 1000);
+    window.history.pushState('Access Token', null, '/');
+  }
+
+  
   // If the track is not already in the playlist, add it
   addTrack(track) {
     console.log(`APP.JS -->  addTrack with: ${track}`);
@@ -72,16 +104,18 @@ class App extends Component {
     ////////////////////////
     // Once the playlist is save set the state back to empty
     this.setState({
-      playlistName: "",
+      playlistName: "Dan's Playlist",
       searchResults: [],
       playlistTracks: []
     });
   }
   // Search for tracks using the Spotify API
   search(term) {
+    console.log(`APP.JS -->  search : ${term}`);
+    if(!this.state.accessToken){this.GetAccessToken()}
     console.log(`APPS.search Entering with: ${term}`);
     if(term){ //if NO TERM ,CALL to spotify.search response with an error bad:response
-      Spotify.search(term)
+      Spotify.search(term, this.state.accessToken)
             .then(response => this.setState({
               searchResults: response
             }));
