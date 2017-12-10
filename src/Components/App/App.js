@@ -7,13 +7,9 @@ import { PlayList } from '../PlayList/PlayList';
 import Spotify from '../../util/Spotify';
 import './App.css';
 
-// Get access token
-//Spotify.getAccessToken();
-//console.log('APP.JS -->  Spotify.getAccessToken');
 
 // Create the App Component
-class App extends Component {
-  //console.log('APP.JS -->  App component');
+class App extends Component {  
 
   constructor(props){
     console.log('APP.JS -->  constructor');
@@ -32,8 +28,9 @@ class App extends Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
-  }
+  } 
 
+  //before compoennt is mounted it gets authorization
   componentWillMount() {
     console.log(`APP.JS -->  componentWillMount`);
     this.GetAccessToken()
@@ -51,9 +48,9 @@ class App extends Component {
       this.SetAccessToken(urlAccessToken[1],urlExpiresIn[1])
       
     } else {
-      let scope = 'playlist-modify-public';
-      let state= generateRandomString(8);      
-      let accessUrl= Spotify.accessUrl(scope,state)      
+      const scope = 'playlist-modify-public';
+      const state= generateRandomString(8);      
+      const accessUrl= Spotify.accessUrl(scope,state)      
       window.location = accessUrl;
     }
   }
